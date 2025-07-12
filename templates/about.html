@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}About the Project{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="text-center">📘 About the Nifty Return Predictor</h2>
+  <p class="lead text-center">This project uses historical stock data from Nifty 50 to predict short-term returns based on lag features and linear regression.</p>
+
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <ul class="list-group">
+        <li class="list-group-item">✅ Built with: Python, Flask, Scikit-learn</li>
+        <li class="list-group-item">📊 Charting with: Chart.js</li>
+        <li class="list-group-item">🌗 Dark/Light mode toggle with localStorage</li>
+        <li class="list-group-item">📁 CSV Upload and real-time model retraining</li>
+        <li class="list-group-item">🧪 Shows R² Score & MSE for model evaluation</li>
+        <li class="list-group-item">📜 Swagger API Documentation enabled</li>
+      </ul>
+      <p class="mt-4">Created by <strong>Vaibhavi Gurav</strong> during internship. You can use, extend, or deploy it for educational or real-world stock analysis purposes.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

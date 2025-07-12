@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Nifty Dashboard{% endblock %}
+{% block content %}
+<h2 class="text-center mb-3">📈 Nifty Return Predictor</h2>
+<p class="text-center mb-4">Enter lag features to predict the next return</p>
+
+<form method="POST" action="/predict" class="border p-4 rounded bg-white shadow-lg w-75 mx-auto" style="max-width: 500px;">
+  <div class="mb-3">
+    <label for="lag1" class="form-label fw-semibold">📌 Lag 1</label>
+    <div class="input-group">
+      <span class="input-group-text">L1</span>
+      <input type="number" step="any" name="lag1" class="form-control" required placeholder="e.g. 0.0123">
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="lag2" class="form-label fw-semibold">📌 Lag 2</label>
+    <div class="input-group">
+      <span class="input-group-text">L2</span>
+      <input type="number" step="any" name="lag2" class="form-control" required placeholder="e.g. -0.0045">
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label for="lag3" class="form-label fw-semibold">📌 Lag 3</label>
+    <div class="input-group">
+      <span class="input-group-text">L3</span>
+      <input type="number" step="any" name="lag3" class="form-control" required placeholder="e.g. 0.0056">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-success w-100">🚀 Predict Return</button>
+</form>
+
+{% if prediction_text %}
+  <div class="alert alert-info text-center my-4">{{ prediction_text }}</div>
+{% endif %}
+
+<div class="text-center mt-4">
+  <form method="POST" action="/retrain" class="d-inline">
+    <button class="btn btn-warning">🔁 Retrain Model</button>
+  </form>
+  <a href="/download" class="btn btn-outline-primary ms-2">📥 Download Data</a>
+  <a href="/download-log" class="btn btn-outline-secondary ms-2">📥 Download Log</a>
+</div>
+
+<h4 class="text-center mt-5">📊 Model Performance</h4>
+<ul class="list-group w-50 mx-auto">
+  <li class="list-group-item">R² Score: {{ model_r2 }}</li>
+  <li class="list-group-item">MSE: {{ model_mse }}</li>
+</ul>
+
+<h4 class="text-center mt-5">📉 Nifty Close, High & Low</h4>
+<canvas id="niftyChart" height="100"></canvas>
+
+<script>
+  fetch('/chart-data')
+    .then(res => res.json())
+    .then(data => {
+      const ctx = document.getElementById('niftyChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.dates,
+          datasets: [
+            {
+              label: 'Close',
+              data: data.close,
+              borderColor: 'blue',
+              fill: false
+            },
+            {
+              label: 'High',
+              data: data.high,
+              borderColor: 'green',
+              fill: false
+            },
+            {
+              label: 'Low',
+              data: data.low,
+              borderColor: 'red',
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true
+            }
+          }
+        }
+      });
+    });
+</script>
+{% endblock %}

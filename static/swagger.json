@@ -1,0 +1,51 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Nifty Return Predictor API",
+    "description": "API for uploading CSV, predicting returns, downloading processed data, and chart info",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/predict": {
+      "post": {
+        "summary": "Predict return from lag values",
+        "parameters": [
+          {"in": "formData", "name": "lag1", "type": "number", "required": true},
+          {"in": "formData", "name": "lag2", "type": "number", "required": true},
+          {"in": "formData", "name": "lag3", "type": "number", "required": true}
+        ],
+        "responses": {"200": {"description": "Prediction result"}}
+      }
+    },
+    "/upload": {
+      "post": {
+        "summary": "Upload a new CSV file",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {"in": "formData", "name": "file", "type": "file", "required": true}
+        ],
+        "responses": {"200": {"description": "File processed and model retrained"}}
+      }
+    },
+    "/chart-data": {
+      "get": {
+        "summary": "Get stock chart data",
+        "responses": {"200": {"description": "Chart data as JSON"}}
+      }
+    },
+    "/download": {
+      "get": {
+        "summary": "Download processed dataset",
+        "responses": {"200": {"description": "CSV file download"}}
+      }
+    },
+    "/retrain": {
+      "post": {
+        "summary": "Retrain model using existing data",
+        "responses": {"302": {"description": "Redirect to homepage"}}
+      }
+    }
+  }
+}
