@@ -3,18 +3,29 @@ import pandas as pd
 import numpy as np
 import pickle
 import os
+import requests
+from io import BytesIO
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error
 from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
 
+# Google Drive file links
+pkl_url = "https://drive.google.com/uc?export=download&id=1qw-CLrfc3UaWKhj1imj35Qia1hBKVnMe"
+xlsx_url = "https://drive.google.com/uc?export=download&id=1KLJYrbHoshYW6ETUzI9iRKX64HJgjKqs"
+
 model_path = 'nifty_processed.pkl'
 data_path = 'data/processed_data.xlsx'
 prediction_log = []
 
+def load_model():
+    response = requests.get(pkl_url)
+    return pickle.loads(response.content)
+
 def load_data():
-    df = pd.read_excel(data_path)
+    response = requests.get(xlsx_url)
+    df = pd.read_excel(BytesIO(response.content))
     df.dropna(inplace=True)
     df['Lag1'] = df['Return'].shift(1)
     df['Lag2'] = df['Return'].shift(2)
@@ -22,18 +33,15 @@ def load_data():
     df.dropna(inplace=True)
     return df
 
-def load_model():
-    return pickle.load(open(model_path, 'rb'))
+model = load_model()
+df = load_data()
+model_r2, model_mse = calculate_metrics(model, df)
 
 def calculate_metrics(model, df):
     X = df[['Lag1', 'Lag2', 'Lag3']]
     y = df['Return']
     y_pred = model.predict(X)
     return round(r2_score(y, y_pred), 4), round(mean_squared_error(y, y_pred), 6)
-
-model = load_model()
-df = load_data()
-model_r2, model_mse = calculate_metrics(model, df)
 
 @app.route('/')
 def home():
@@ -98,7 +106,7 @@ def download_log():
 
 @app.route('/chart-data')
 def chart_data():
-    df = pd.read_excel(data_path)
+    df = load_data()
     return jsonify({
         'dates': df['Date'].astype(str).tolist(),
         'close': df['Close'].tolist(),
@@ -110,6 +118,7 @@ def chart_data():
 def about():
     return render_template('about.html')
 
+# Swagger UI
 SWAGGER_URL = '/docs'
 API_URL = '/static/swagger.json'
 swaggerui_blueprint = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={'app_name': "Nifty Predictor"})
