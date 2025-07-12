@@ -1,6 +1,7 @@
-flask==2.3.3
+Flask==2.3.3
 flask-swagger-ui==3.36.0
-pandas==1.5.3
-numpy==1.26.4
+pandas==2.2.2
+numpy==1.24.3
 scikit-learn==1.4.2
 matplotlib==3.8.4
+openpyxl
