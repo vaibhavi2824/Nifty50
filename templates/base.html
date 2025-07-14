@@ -1,3 +1,4 @@
+<!-- base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,18 +9,18 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="/static/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light" id="main-body">
+<body id="main-body">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">📊 Nifty Predictor</a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto">
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link" href="/upload">Upload</a></li>
           <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
           <li class="nav-item"><a class="nav-link" href="/docs">API Docs</a></li>
         </ul>
-        <button type="button" class="btn btn-outline-light btn-sm theme-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌓 Toggle</button>
+        <button type="button" class="btn btn-outline-light ms-3" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌓</button>
       </div>
     </div>
   </nav>
@@ -29,19 +30,23 @@
   </main>
 
   <footer class="bg-dark text-white text-center py-3 mt-5">
-    <p class="mb-0">📈 Nifty Return Predictor | Built with Flask, ML & Chart.js<br>© 2025 Vaibhavi Gurav. All rights reserved.</p>
+    <p class="mb-0">📈 Nifty Return Predictor <br>© 2025 Vaibhavi Gurav. All rights reserved.</p>
   </footer>
 
   <script>
-    function toggleTheme() {
-      const body = document.getElementById('main-body');
-      body.classList.toggle('dark-mode');
-      localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+  function toggleTheme() {
+    const body = document.getElementById('main-body');
+    body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+  }
+
+  window.onload = () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.getElementById('main-body').classList.add('dark-mode');
     }
-    window.onload = function () {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') document.getElementById('main-body').classList.add('dark-mode');
-    }
-  </script>
+  }
+</script>
+
 </body>
 </html>

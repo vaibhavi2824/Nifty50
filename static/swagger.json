@@ -12,11 +12,15 @@
       "post": {
         "summary": "Predict return from lag values",
         "parameters": [
-          {"in": "formData", "name": "lag1", "type": "number", "required": true},
-          {"in": "formData", "name": "lag2", "type": "number", "required": true},
-          {"in": "formData", "name": "lag3", "type": "number", "required": true}
+          { "in": "formData", "name": "lag1", "type": "number", "required": true },
+          { "in": "formData", "name": "lag2", "type": "number", "required": true },
+          { "in": "formData", "name": "lag3", "type": "number", "required": true }
         ],
-        "responses": {"200": {"description": "Prediction result"}}
+        "responses": {
+          "200": {
+            "description": "Prediction result"
+          }
+        }
       }
     },
     "/upload": {
@@ -24,27 +28,53 @@
         "summary": "Upload a new CSV file",
         "consumes": ["multipart/form-data"],
         "parameters": [
-          {"in": "formData", "name": "file", "type": "file", "required": true}
+          { "in": "formData", "name": "csv_file", "type": "file", "required": true }
         ],
-        "responses": {"200": {"description": "File processed and model retrained"}}
+        "responses": {
+          "200": {
+            "description": "File processed and model retrained"
+          }
+        }
       }
     },
     "/chart-data": {
       "get": {
         "summary": "Get stock chart data",
-        "responses": {"200": {"description": "Chart data as JSON"}}
+        "responses": {
+          "200": {
+            "description": "Chart data as JSON"
+          }
+        }
       }
     },
     "/download": {
       "get": {
         "summary": "Download processed dataset",
-        "responses": {"200": {"description": "CSV file download"}}
+        "responses": {
+          "200": {
+            "description": "Excel file download"
+          }
+        }
+      }
+    },
+    "/download-log": {
+      "get": {
+        "summary": "Download prediction log",
+        "responses": {
+          "200": {
+            "description": "Log file download"
+          }
+        }
       }
     },
     "/retrain": {
       "post": {
-        "summary": "Retrain model using existing data",
-        "responses": {"302": {"description": "Redirect to homepage"}}
+        "summary": "Retrain model using uploaded data",
+        "responses": {
+          "302": {
+            "description": "Redirect to homepage after retraining"
+          }
+        }
       }
     }
   }

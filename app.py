@@ -15,7 +15,7 @@ app = Flask(__name__)
 pkl_url = "https://drive.google.com/uc?export=download&id=1qw-CLrfc3UaWKhj1imj35Qia1hBKVnMe"
 xlsx_url = "https://drive.google.com/uc?export=download&id=1KLJYrbHoshYW6ETUzI9iRKX64HJgjKqs"
 
-model_path = 'nifty_processed.pkl'
+model_path = 'model/nifty_processed.pkl'
 data_path = 'data/processed_data.xlsx'
 prediction_log = []
 
@@ -33,15 +33,15 @@ def load_data():
     df.dropna(inplace=True)
     return df
 
-model = load_model()
-df = load_data()
-model_r2, model_mse = calculate_metrics(model, df)
-
 def calculate_metrics(model, df):
     X = df[['Lag1', 'Lag2', 'Lag3']]
     y = df['Return']
     y_pred = model.predict(X)
     return round(r2_score(y, y_pred), 4), round(mean_squared_error(y, y_pred), 6)
+
+model = load_model()
+df = load_data()
+model_r2, model_mse = calculate_metrics(model, df)
 
 @app.route('/')
 def home():
@@ -61,7 +61,7 @@ def predict():
         pd.DataFrame(prediction_log).to_excel('data/prediction_log.xlsx', index=False)
         return render_template('index.html', prediction_text=f"📈 Predicted Return: {prediction:.4f}",
                                prediction_log=prediction_log, model_r2=model_r2, model_mse=model_mse)
-    except Exception as e:
+    except Exception:
         return render_template('index.html', prediction_text='⚠️ Invalid input!',
                                prediction_log=prediction_log, model_r2=model_r2, model_mse=model_mse)
 
